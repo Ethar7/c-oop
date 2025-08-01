@@ -559,3 +559,38 @@ internal class TypeA
 
 
 }
+
+
+// product.cs class library
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ClassLibrary1;
+
+public class Product
+{
+    public int Id { get; set; }
+
+    public string Name { get; set; }
+
+
+    public string Description { get; set; }
+
+    public decimal Price { get; set; }
+
+
+    public int Count { get; set; }
+
+
+    public override string ToString()
+    {
+        return $"ID : {Id} \nName : {Name} \nDescription : {Description}\nPrice : {Price}\nQuantity : {Count}";
+    }
+
+
+}
