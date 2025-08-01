@@ -1,0 +1,561 @@
+// program.cs
+
+using System;
+using System.Collections.ObjectModel;
+using System.Data.Common;
+using System.Net;
+using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
+using ClassLibrary1;
+using MyApp;
+using TypeA;
+using TypeB;
+
+// internal [defoult]
+// public
+// access modifier allowed in namespace
+
+// namespace itself doesnt have access modifier
+
+class Program
+{
+
+    static void main()
+    {
+        #region class libray
+
+        // TypeS of projects [Web - mobile - desktop]
+        // Collection of classes interfaces that can be used in multiple projects
+        // not executable
+
+        Product p1 = new Product()
+        {
+            Id = 10,
+            Name = "IPhone",
+            Description = "Apple Mobile",
+            Price = 60000,
+            Count = 100
+        };
+
+        Console.WriteLine(p1);
+        #endregion
+
+
+        #region Access modifiers
+
+        /*
+            private  
+            private protected
+            protected
+            internal
+            protected internal
+            public
+        */
+
+        TypeA type = new TypeA();
+
+        type.x = 10; //invalid because protection level
+        type.y = 20; //invalid because protection level
+        type.z = 30; // valid because its public acess modifier inside solution
+
+        #endregion
+
+
+        #region user defined datatypes
+
+
+
+        #region class
+
+        /* 
+
+        what you can write inside class?
+
+               attributes [fields]
+               functions [CTOR, settergetter , Method]
+               properties [Full , Auto , Indexer]
+               events
+
+        allowed access modifiers inside class
+
+                6 access modifiers are allowed
+                default access modifier inside class = private 
+
+        default access modifier for class 
+
+                internal       
+
+
+        */
+
+        #endregion
+
+
+
+        #region struct
+
+        /* 
+
+      what you can write inside struct?
+
+             attributes [fields]
+             functions [CTOR, settergetter , Method]
+             properties [Full , Auto , Indexer]
+             events
+
+      allowed access modifiers inside struct
+
+              private [default] | internal | public
+
+
+      default access modifier for struct
+
+              internal       
+
+
+      */
+
+
+        #endregion
+
+
+        #region Interface
+
+        /*
+          what you can write inside interface?
+
+                     1- signature for property
+                     2- signature for method
+                     3- default implemented method => c# 8.0 [.net core]
+
+
+          Default Access modifier inside interface => public
+          default Access modifier for interface => internal
+        */
+
+        #endregion
+
+
+
+        #region Enum
+
+        /*
+            what you can write inside Enum
+
+                  set of names constants [lables]
+            
+            Accesss Allowed inside Enum
+
+                  No Access modifier Allowed
+
+            Default Access Modifier For Enum
+                  
+                  internal
+
+            
+        */
+        #region example1
+        Person p1 = new Person();
+
+        p1.Id = 1;
+        p1.Name = "Hossam";
+        p1.Gender = Gender.Male;
+
+        #endregion
+
+
+        #region example2
+
+        // grades : A B C D E F
+
+        grades g1 = new grades();
+
+        // new => Assign Default Value Of DataType [int] = 0
+
+        g1 = grades.B;
+
+
+        g1 = (grades)5;
+
+        Console.WriteLine(g1); // 0 => A
+
+        if (g1 == grades.A || g1 == grades.B)
+
+            Console.WriteLine("Bravo");
+
+        else
+            Console.WriteLine("Good");
+        #endregion
+
+        #region example3 [permissions]
+
+        // permissions : Delete | Write | Execute | Read
+
+
+        User user1 = new User();
+
+        user1.Id = 10;
+        user1.permisions = (permisions)20;
+
+        Console.WriteLine(user1.permisions);
+
+        User user2 = new User();
+
+        user2.Id = 20;
+
+        user2.permisions = (permisions)3;
+
+        Console.WriteLine(user2.permisions);
+
+        // To Add New Permissions => XOR Operator => Bitwise 
+
+        // Add Read Permission
+
+
+        user2.permisions = user2.permisions ^ permisions.Read;
+        Console.WriteLine(user2.permisions);
+
+        // To Deny Permission From User => Use XOR
+
+        // Check If User Have This Permission or Not 
+
+
+        user2.permisions ^= permisions.Read;
+        Console.WriteLine(user2.permisions);
+
+
+        // check if user has execute or not => & operator
+
+        if ((user2.permisions & permisions.Write) == permisions.Write)
+            Console.WriteLine("user has write permission");
+
+        else
+
+            user2.permisions ^= permisions.Write;
+
+        Console.WriteLine(user2.permisions);
+
+
+        bool haswrite = user2.permisions.HasFlag(permisions.Write);
+
+        if (haswrite)
+            Console.WriteLine("user has write permission");
+
+        else
+            Console.WriteLine("user hasnt write permission");
+
+
+        // or operator |
+        // check if permissions exsisted or not
+        // exsisted => do nothing
+        // not exsisted => Add permisions
+
+        user2.permisions = user2.permisions | permisions.Read;
+
+        Console.WriteLine(user2.permisions);
+        #endregion
+
+        #endregion
+
+
+
+        #endregion
+
+    }
+
+
+  // User.cs
+
+  using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+
+namespace MyApp
+{
+    internal class User
+    {
+        public int Id { get; set; }
+
+        public permisions permisions { get; set; }
+    }
+   
+}
+
+// person.cs
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+
+namespace MyApp
+{
+    internal class Person
+    {
+        public int Id { get; set; }
+        
+        public string Name { get; set; }
+
+        public Gender Gender { get; set; }
+
+
+    }
+}
+
+
+//permissions.cs
+
+  using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+
+namespace MyApp
+{
+
+    [Flags] // handle thise permissions as bits values [00000011]
+    internal enum permisions : byte
+    {
+        //each byte has 8 bits
+        Delete = 1, // 00000001
+        Execute = 2, // 00000010
+        Read = 4,// 00000100
+        Write = 8// 00001000
+    }
+   
+}
+
+
+  // mystruct.cs
+
+  using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+
+namespace MyApp
+{
+    internal struct mystruct
+    {
+        // attribute
+
+        private int attr;
+
+
+        //function
+        internal void func01()
+        {
+            Console.WriteLine(attr);
+        }
+
+        // property
+
+        public int MyProperty { get; set; }
+
+        // events
+
+        
+    }
+}
+
+// myenums.cs
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+
+namespace MyApp
+{
+    internal enum MyEnum
+    {
+        //lables
+        sunday,
+        moday,
+        tuesday,
+        wednesday,
+        thursday,
+        friday,
+        saturday
+    }
+}
+
+
+
+//IMyInterface.cs
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+
+namespace MyApp
+{
+    internal interface IMyInterface
+    {
+        // 1- signature for property
+
+        public int MyProperty { get; set; }
+        // 2- signature for method
+
+        void Print();
+
+        // 3- default implemented method => c# 8.0 [.net core]
+
+        public void print01()
+        {
+            Console.WriteLine("hello from interface !");
+        }
+
+
+    }
+}
+
+  // grades.cs
+
+  using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+
+namespace MyApp
+{
+    internal enum grades
+    {
+        A,B,C,D,E,F
+    }
+   
+}
+
+
+// Gender.cs
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+
+namespace MyApp
+{
+    internal enum Gender
+    {
+        Male = 1,
+        Female = 2,
+        M = 1,
+        F = 2
+    }
+}
+
+
+//class12.cs
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+
+namespace MyApp
+{
+    public class Myclass
+    {
+        // attribute
+
+        public int attr;
+
+
+        //function
+        public void func01()
+        {
+            Console.WriteLine(attr);
+        }
+
+        // property
+
+        public int MyProperty { get; set; }
+
+        // events
+
+        
+
+    }
+}
+
+
+//class1.cs TypeB
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+namespace TypeB;
+
+public class TypeB
+{
+    public TypeB()
+    {
+        TypeA typea = new TypeA()
+        typea.x = 1; // invalid due to accessible level
+        typea.y = 2; // valid => internal accessible with in same project
+        typea.z = 3; // valid => public accessible within any project in solution
+    }
+}
+
+
+// class1.cs TypeA
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TypeA;
+
+internal class TypeA
+{
+   private int x;
+   internal int y;
+   public int z;
+
+    public TypeA()
+    {
+
+        // accessible within thwe same class
+        x = 1; 
+        y = 2;
+        z = 3;
+    }
+}
+
+
+}
